@@ -70,34 +70,62 @@ describe MagicSeven do
   # Write a test for each of the following methods:
 
   describe '#subtract_four' do
+    context 'When previous step is 16'
+      it 'returns 12' do
+        step_two = 16
+        result = game.subtract_four(step_two)
+        expect(result).to eq(12)
+      end
   end
 
   describe '#divide_by_two' do
+  context 'When previous step is 12'
+      it 'returns 6' do
+        step_three = 12
+        result = game.divide_by_two(step_three)
+        expect(result).to eq(6)
+      end
+
   end
 
   # The following tests will need you to create new instances of MagicSeven with
   # a specific value for the random_number.
+  subject(:game) { described_class.new(45) }
   describe '#subtract_random_number' do
+    context 'When random number is 45'
+      it 'returns 5' do
+        result = game.subtract_random_number(50)
+        expect(result).to eq(5)
+      end
   end
 
   # The #play method will always return seven! Test this game, using any
   # integer as the random_number. Update the context with the number.
   describe '#play' do
-    context 'when the random number is ...' do
+    context 'when the random number is 45' do
       # remove the 'x' before running this test
-      xit 'will return 7' do
+      subject(:game) { described_class.new(45) }
+      it 'will return 7' do
+        result = game.play
+        expect(result).to eq(7)
       end
     end
 
-    context 'when the random number is ...' do
+    context 'when the random number is 10' do
       # remove the 'x' before running this test
-      xit 'will return 7' do
+      subject(:game) { described_class.new(10) }
+      it 'will return 7' do
+        result = game.play
+        expect(result).to eq(7)
       end
     end
 
-    context 'when the random number is ...' do
+    context 'when the random number is 100' do
       # remove the 'x' before running this test
-      xit 'will return 7' do
+      subject(:game) { described_class.new(100) }
+      it 'will return 7' do
+        result = game.play
+        expect(result).to eq(7)
       end
     end
   end

@@ -47,11 +47,17 @@ describe NumberGame do
 
       # Write a similar test to the one above, that uses a custom matcher
       # instead of <, >, =.
-      matcher :be_between_zero_and_nine do
+      matcher :be_between_zero_and_nine do |solution|
+        match do |solution|
+         true if solution >= 0 && solution <= 9
+         false
+        end
       end
 
       # remove the 'x' before running this test
-      xit 'is a number between 0 and 9' do
+      it 'is a number between 0 and 9' do
+        solution = game.solution
+        be_between_zero_and_nine(solution)
       end
     end
   end
@@ -79,7 +85,9 @@ describe NumberGame do
     # does not equal @solution.
     context 'when user guess is not correct' do
       # remove the 'x' before running this test
-      xit 'is not game over' do
+      subject(:game_continue) { described_class.new(2, '5') }
+      it 'is not game over' do
+        expect(game_continue).not_to be_game_over
       end
     end
   end
@@ -91,7 +99,7 @@ describe NumberGame do
 
   # Since we do not have to test #player_input, let's test #verify_input.
 
-  describe '#verify_input' do
+  describe '#verify_input' do 
     subject(:game_check) { described_class.new }
     # Note: #verify_input will only return a value if it matches /^[0-9]$/
 
@@ -107,7 +115,10 @@ describe NumberGame do
 
     # Write a test for the following context.
     context 'when given invalid input as argument' do
-      xit 'returns nil' do
+      it 'returns nil' do
+        user_input = 'T'
+        verified_input = game_check.verify_input(user_input)
+        expect(verified_input).to be nil
       end
     end
   end
@@ -168,9 +179,15 @@ describe NumberGame do
     # Write a test for the following context.
     context 'when user inputs two incorrect values, then a valid input' do
       before do
+        letter = 'd'
+        letter2 = 'f'
+        valid_input = '8'
+        allow(game_loop).to receive(:player_input).and_return(letter, letter2, valid_input)
       end
 
-      xit 'completes loop and displays error message twice' do
+      it 'completes loop and displays error message twice' do
+        expect(game_loop).to receive(:puts).with('Input error!').twice
+        game_loop.player_turn
       end
     end
   end
@@ -183,7 +200,7 @@ describe NumberGame do
   # However, here is an example of how to test 'puts' using the output matcher.
   # https://rspec.info/features/3-12/rspec-expectations/built-in-matchers/output/
 
-  describe '#final_message' do
+  describe '#final_message' do 
     context 'when count is 1' do
       # To test this method, we need to set specific values for @solution,
       # @guess and @count, so we will create a new instance of NumberGame.
@@ -202,7 +219,9 @@ describe NumberGame do
     # @guess, and @count
     context 'when count is 2-3' do
       # remove the 'x' before running this test
-      xit 'outputs correct phrase' do
+      subject(:game) { described_class.new(5, '5', 3) }
+
+      it 'outputs correct phrase' do
         congrats_phrase = "Congratulations! You picked the random number in 3 guesses!\n"
         expect { game.final_message }.to output(congrats_phrase).to_stdout
       end
@@ -212,8 +231,11 @@ describe NumberGame do
 
     # Write a test for the following context.
     context 'when count is 4 and over' do
+      subject(:game_hard) { described_class.new(5, '5', 5) }
       # remove the 'x' before running this test
-      xit 'outputs correct phrase' do
+      it 'outputs correct phrase' do
+        hard_phrase = "That was hard. It took you 5 guesses!\n"
+        expect { game_hard.final_message }.to output(hard_phrase).to_stdout
       end
     end
   end
